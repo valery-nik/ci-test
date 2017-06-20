@@ -1,4 +1,14 @@
+# https://gist.github.com/BretFisher/14cd228f0d7e40dae085
+# https://sebest.github.io/post/using-travis-ci-to-build-docker-images/
+# https://docs.travis-ci.com/user/docker/
 sudo: required #is required to use docker service in travis
+
+env:
+#  global:
+#    - secure: "hTfQXImFz8ewgQbNwBf7P3JrnCsevj+tQPT0TQBb8dgMdM8M5H3p7ys5UWSnTqQKalusqSCUpyZwkiPMqzQMiddid1nmMXPgmKbrfcji69fOP9aDQyl8WtGeZik3YwQpm3OOtJ1VTK0L0TQ3LNXPb6UP4369MfSn/MIFNdE3Pcx7kqTalA2LTiLiist51PKcdOGGErxhejPuRa2hNjw9bQ2SAgshVDeYJToPYH/NYNOoQz918ir8b2Jl6SXs+87X+uEf8nUR2SXD/O1x3xzBmDKbYxiZ+bFclSK8DUupDVygqgpzl9sS79gDiyYhQdDxRZKZn9r7h8qX+p/8yodmzY/dzTbjeIhK0Vxs5KODl4g4kh38cv79CQ8rAuhYqpQU+dTBP6bO1O3rMlErtwfxOCgNU72VDk0JhbX/qK0y/lwyMcpYVo4SXa85CQx0TbiPDAL9sfa2aaK4IUcZnqZRJ61dCA/+DR6VUzmmZTSTQvsUKwrlWt6VUXx0u+J/Z9z+b6snBHgtIqH/e9YbqQEM+ic6576G+XKVoVpvBdrIZA2LEGeBB6U3g7ocJX1UuudrXBSueE0hLJjyJRNyHbuEQGkBw23NxX8cHZV8c4SRYlPc71OLKCGJSzmvk29klgTexopEN9UsN3fwH9MQKBr3U/axcHsbYkxjuLcK7kc22Sg=" # DOCKER_EMAIL
+#    - secure: "TzvkCZ0NSXNYQkqBK/EK6bl5512Pfl92C2gyXlh2zPDxTO/w4TRC38arSs+oOb9s96LKuuL2PEn5MLikRcxwaMx/xRuN+gPdWByqNg4dtHZaEAp+kOArDQh396xxlTBpBcinOSAckCbTx8L+zln4BHvvSNskXsyaBh7q1N2cXY64Usytappu7azdpYOaCTw0D94FmfQhH+QckPiM221srjgXvmfvZiTV83go+MKmNkQEfh0d4zQ1J90t8zN4Xu+m6EI7M/YzayQJTPRyYDelC6y1u26QS7wiA82o1SGJenbzBpuHQe0k1hbsgI6ctT5qWkM2xzz5FJiR7kKeA8jbPYtos2ooDNmd5cjKdAPaNLU6UfMAWhWj4DiEz4j3JcH1MZAR8sMUyFHAjDpVvq/l9xhehjUaQa8SYFUUV+epnJx4z6QJlTctvY9JzGBLezy3c6xYyuS7AiRwvR1cD1gmSBSKQasHCFUMjX91h5/gh0hzPFOiSkNjjcCd9ba+B0EfzGUYzvfPezV1U0V1LmIFUSF7KvKsfD954p5ADHVO9XI9noAG8sLw7XCloTTzA9yT/qFwMySpDj7BwuPJOYugx1qSzhd8tMA3fSg+iahgbbjoC+d0KSVYYEQPSbKmmGqvkfPMt6JCqnqC7yRg3zTi+qVBFqJYv2YuT59QW0eGTN4=" # DOCKER_USER
+#    - secure: "b2eWlLQ4pCpzDbrV/J62qWxAoxAoURJ7HxqR6D3dRDtDVYYw2hD5/2G2SxKA0l4X9+yCFcBeJHhxOB3ovn4T6CIHjkmwuEn5qWpyMFx1tUsrNZhvOO3r4xxXzIFK5V1SLLRkVvOnBrMDKUptxrpMhfPyxL9YjePa8Mm1qCqXVY71f+c6W/PzAQvC6PrnWdE5mkJNUB+MImJZgUOaRafUZVU/nNLdfnzCnC3m7goWiWAUqfDTrkqmBZtqehQAPl8B5KPUlH9SeBAB2bEAaqhQV99SWBiC1OubMrE7cp+P8Uw1uVjJOZUwD0ypTZMS/Ijj680KHauGUBdfhGs0Qd6nUwNh+L+enGnkP6msEXlTS52SjmJz0XLoW6huWjnznsdcGFy0wc2Hle6QWtOsKuxONPqyUBTIIk6vR+GpnGeh+06NZeGP1iv1eYztxvYhL9TJZypzxHTuoHApOCeeady5OfH7dx6k+mxgkzKMGsVpoUzu77T9EKDy2umJkkuJHHROY/gyBHi5+I6ujmoBzDQOiuLHen61CZye0KnElbgHb1/B1nnl+A8G5l6DWnRKt+RAMC6VGhNYx7BG1Gml2rU2W+FbF6l0DS37D8/4bkufOdu1bmZc07pyATqojrfmwrRo7XTLVsCcZM0mYNszoIWVmU0/Hp9VGmsRzWVx+iuvr8U=" # DOCKER_PASS
+#    - secure: "b2eWlLQ4pCpzDbrV/J62qWxAoxAoURJ7HxqR6D3dRDtDVYYw2hD5/2G2SxKA0l4X9+yCFcBeJHhxOB3ovn4T6CIHjkmwuEn5qWpyMFx1tUsrNZhvOO3r4xxXzIFK5V1SLLRkVvOnBrMDKUptxrpMhfPyxL9YjePa8Mm1qCqXVY71f+c6W/PzAQvC6PrnWdE5mkJNUB+MImJZgUOaRafUZVU/nNLdfnzCnC3m7goWiWAUqfDTrkqmBZtqehQAPl8B5KPUlH9SeBAB2bEAaqhQV99SWBiC1OubMrE7cp+P8Uw1uVjJOZUwD0ypTZMS/Ijj680KHauGUBdfhGs0Qd6nUwNh+L+enGnkP6msEXlTS52SjmJz0XLoW6huWjnznsdcGFy0wc2Hle6QWtOsKuxONPqyUBTIIk6vR+GpnGeh+06NZeGP1iv1eYztxvYhL9TJZypzxHTuoHApOCeeady5OfH7dx6k+mxgkzKMGsVpoUzu77T9EKDy2umJkkuJHHROY/gyBHi5+I6ujmoBzDQOiuLHen61CZye0KnElbgHb1/B1nnl+A8G5l6DWnRKt+RAMC6VGhNYx7BG1Gml2rU2W+FbF6l0DS37D8/4bkufOdu1bmZc07pyATqojrfmwrRo7XTLVsCcZM0mYNszoIWVmU0/Hp9VGmsRzWVx+iuvr8U=" # DOCKER_PASS
 
 language: java
 jdk:
@@ -25,3 +35,12 @@ before_install:
 notifications:
   email:
     - ystal@mail.ru
+
+after_success: # https://sebest.github.io/post/using-travis-ci-to-build-docker-images/
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - export REPO=sebestblog/travis-demo
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker build -f Dockerfile -t $REPO:$COMMIT .
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO
