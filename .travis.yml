@@ -1,8 +1,22 @@
-before_install:
-  - chmod +x mvnw
+sudo: required #is required to use docker service in travis
+
 language: java
 jdk:
   - oraclejdk8
+services:
+  - docker # required, but travis uses older version of docker
+
+install:
+  - echo "install nothing!" # put your normal pre-testing installs here
+
+script:
+  - echo "no tests!" # put your normal testing scripts here
+
+after_success:
+  - docker --version  # document the version travis is using
+
+before_install:
+  - chmod +x mvnw
 #install:
 #- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 #script:
