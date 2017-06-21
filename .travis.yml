@@ -1,6 +1,8 @@
 # https://gist.github.com/BretFisher/14cd228f0d7e40dae085
 # https://sebest.github.io/post/using-travis-ci-to-build-docker-images/
 # https://docs.travis-ci.com/user/docker/
+# https://blog.frankel.ch/travis-ci-tutorial-for-java-projects/#gsc.tab=0
+# https://github.com/sqshq/PiggyMetrics/blob/master/.travis.yml
 sudo: required #is required to use docker service in travis
 dist: trusty
 group: edge
@@ -16,6 +18,10 @@ env:
 language: java
 jdk:
   - oraclejdk8
+cache: # to keep the Maven local repository between different runs (Improve build speed)
+  directories:
+  - $HOME/.m2
+
 services:
   - docker # required, but travis uses older version of docker
 
@@ -24,6 +30,8 @@ install:
 
 script:
   - echo "no tests!" # put your normal testing scripts here
+  - ./mvnw clean install
+  - bash <(curl -s https://codecov.io/bash)
 
 after_success:
   - docker --version  # document the version travis is using
