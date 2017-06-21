@@ -30,7 +30,7 @@ install:
 
 script:
   - echo "no tests!" # put your normal testing scripts here
-  - ./mvnw clean install -b -v
+  - ./mvnw clean install -B -V
   - bash <(curl -s https://codecov.io/bash)
 
 after_success:
