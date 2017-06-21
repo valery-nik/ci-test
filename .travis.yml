@@ -45,7 +45,7 @@ after_success: # https://sebest.github.io/post/using-travis-ci-to-build-docker-i
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
 
   - export CI_TEST=ystal/ci-test
-  - docker build -t $CI-TEST:$COMMIT ./notification-service
+  - docker build -t $CI_TEST:$COMMIT ./notification-service
   - docker tag $CI_TEST:$COMMIT $CI_TEST:$TAG
   - docker push $CI_TEST
 
