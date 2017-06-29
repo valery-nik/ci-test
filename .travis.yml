@@ -28,7 +28,7 @@ after_success:
 - docker tag $CI_TEST:$COMMIT $CI_TEST:$TAG
 - docker push $CI_TEST
 before_install:
-- openssl aes-256-cbc -K $encrypted_416121717b9d_key -iv $encrypted_416121717b9d_iv -in digital_ocean_rsa.enc -out digital_ocean_rsa -d
+- openssl aes-256-cbc -K $encrypted_70f0be092271_key -iv $encrypted_70f0be092271_iv -in digital_ocean_rsa.enc -out digital_ocean_rsa -d
 - chmod +x ./mvnw
 - chmod +x ./deploy.sh
 notifications:
