@@ -1,0 +1,6 @@
+version: '2'
+services:
+ app:
+   image: ystal/ci-test:latest
+   ports:
+     - 8080:8080
