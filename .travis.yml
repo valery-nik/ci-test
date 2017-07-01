@@ -31,7 +31,6 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_dc32aa125b8c_key -iv $encrypted_dc32aa125b8c_iv
   -in digital_ocean_rsa.enc -out ./digital_ocean_rsa -d
 - chmod +x ./mvnw
-- chmod +x ./deploy.sh
 notifications:
   email:
   - ystal@mail.ru
