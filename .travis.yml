@@ -39,6 +39,6 @@ deploy:
   provider: script
   skip_cleanup: true
   script: chmod 600 digital_ocean_rsa && ssh -o StrictHostKeyChecking=no -i ./digital_ocean_rsa
-    root@159.203.94.228 './deploy.sh'
+    root@"$DEPLOY_SERVER" './deploy.sh'
   on:
     branch: master
