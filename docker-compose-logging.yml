@@ -1,0 +1,47 @@
+version: '2'
+services:
+  logspout:
+    image: amouat/logspout-logstash:latest
+    networks:
+        - docker_elk
+    volumes:
+      - '/var/run/docker.sock:/tmp/docker.sock'
+    ports:
+      - '8000:80'
+#    command: logstash://logstash:5000
+    environment:
+      ROUTE_URIS: logstash://logstash:5000
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:5.2.2 # docker pull docker.elastic.co/logstash/logstash:5.2.2
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    environment:
+      - LOGSPOUT=ignore
+      - DROP_NON_JSON=false
+      - STDOUT=true
+    ports:
+      - '5000:5000'
+      - '5000:5000/udp'
+    networks:
+        - docker_elk
+
+#    links:
+#      - elasticsearch
+#
+#  kibana:
+#    image: kibana
+#    environment:
+#      - LOGSPOUT=ignore
+#    links:
+#      - elasticsearch
+#    ports:
+#      - '5601:5601'
+#
+#  elasticsearch:
+#    image: elasticsearch
+#    environment:
+#      - LOGSPOUT=ignore
+networks:
+  docker_elk:
+    driver: bridge
