@@ -1,0 +1,3 @@
+insert into articles(id, name, category, tags, author, sent) values (1, "SpringIntegration Example", "spring", "spring,integration", "Joe", 0);
+insert into articles(id, name, category, tags, author, sent) values (2, "NamedParameterJdbcTemplate Example", "spring", "spring,jdbcTemplate", "Sam", 0);
+insert into articles(id, name, category, tags, author, sent) values (3, "MVC Example", "spring", "spring", "Joe", 0);

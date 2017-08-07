@@ -1,10 +1,12 @@
-FROM nimmis/alpine-java:openjdk-8-jdk
+#FROM nimmis/alpine-java:openjdk-8-jdk
+FROM openjdk:8-jre-alpine
 MAINTAINER Igor Ozol <ystal@mail.ru>
 VOLUME /tmp
 ADD ./target/ci-test.jar /app.jar
 
-RUN useradd -s /bin/bash ystal
-USER ystal
+RUN adduser -D -u 1000 ystal
+#RUN useradd -s /bin/bash ystal
+#USER ystal
 
 RUN sh -c 'touch /app.jar'
 ENV JAVA_OPTS=""

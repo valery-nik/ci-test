@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:cassandra="http://www.springframework.org/schema/data/cassandra"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-jdbc="http://www.springframework.org/schema/integration/jdbc"
+       xmlns:int-cassandra="http://www.springframework.org/schema/integration/cassandra"
+       xmlns:file="http://www.springframework.org/schema/integration/file"
+       xmlns:feed="http://www.springframework.org/schema/integration/feed"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+   		http://www.springframework.org/schema/data/cassandra http://www.springframework.org/schema/data/cassandra/spring-cassandra.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+
+        http://www.springframework.org/schema/integration/feed http://www.springframework.org/schema/integration/feed/spring-integration-feed.xsd
+		http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+		http://www.springframework.org/schema/integration/cassandra http://www.springframework.org/schema/integration/cassandra/spring-integration-cassandra.xsd
+    	http://www.springframework.org/schema/integration/jdbc http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd
+
+        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <import resource="classpath*:spring-data-cassandra-configuration.xml" />
+
+    <!--jdbc beans -->
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://192.168.99.100:3306/integration?autoReconnect=true&amp;useSSL=false" />
+        <property name="username" value="root" />
+        <property name="password" value="123456" />
+    </bean>
+
+    <jdbc:initialize-database data-source="dataSource" enabled="true">
+        <jdbc:script location="classpath:db-schema.sql" />
+        <jdbc:script location="classpath:db-test-data.sql" />
+    </jdbc:initialize-database>
+
+    <bean id="articleRowMapper"
+          class="ru.oz.ci.citest.integration.ArticleRowMapper" />
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!--integrations beans-->
+
+    <!--канал - логическая абстракция к которой привязаны посылаемые сообщения-->
+    <int:channel id="dataChannel">
+        <int:queue />
+    </int:channel>
+
+    <!--Получатель сообщений из канала dataChannel-->
+    <int-jdbc:inbound-channel-adapter id="jdbcAdapter"
+                                      channel="dataChannel"
+                                      query="select * from articles where author='Joe' and sent = 0"
+                                      update="update articles set sent = 1 where id in (:id)"
+                                      data-source="dataSource" row-mapper="articleRowMapper">
+        <int:poller fixed-rate="100">
+            <int:transactional />
+        </int:poller>
+    </int-jdbc:inbound-channel-adapter>
+
+    <!--Отправитель сообщений в канал dataChannel -->
+    <!--<int-cassandra:outbound-channel-adapter id="cassandraAdapter"-->
+                                            <!--channel="dataChannel"-->
+                                            <!--cassandra-template="cqlTemplate"-->
+                                            <!--ingest-query="insert into book (isbn, title, author, pages, saleDate, isInStock) values (?, ?, ?, ?, ?, ?)"-->
+    <!--/>-->
+
+    <bean id="writeOptions" class="org.springframework.cassandra.core.WriteOptions">
+        <property name="ttl" value="60" />
+        <property name="consistencyLevel">
+            <util:constant
+                    static-field="org.springframework.cassandra.core.ConsistencyLevel.ONE" />
+        </property>
+        <property name="retryPolicy">
+            <util:constant
+                    static-field="org.springframework.cassandra.core.RetryPolicy.DOWNGRADING_CONSISTENCY" />
+        </property>
+    </bean>
+    <int-cassandra:outbound-channel-adapter id="cassandraMessageHandler2"
+                                            channel="dataChannel"
+                                            cassandra-template="cqlTemplate"
+                                            write-options="writeOptions"
+                                            auto-startup="true" />
+
+
+    <!--<int-jpa:outbound-channel-adapter id="moduleMessagePersister" channel="inputPersisterChannel" persist-mode="MERGE" entity-manager-factory="entityManagerFactory">-->
+        <!--<int-jpa:transactional transaction-manager="transactionManager"/>-->
+    <!--</int-jpa:outbound-channel-adapter>-->
+
+
+    <!--активатор службы - потребитель сообщения из канала (получает сообщение что бы передать его в службу jdbcMessageHandler.handleMessage2 -->
+    <int:service-activator input-channel="dataChannel"
+                           ref="jdbcMessageHandler"
+                           method="handleMessage2">
+    </int:service-activator>
+
+    <!--служба, которую нужно вызвать на приход сообщения-->
+    <bean id="jdbcMessageHandler"
+          class="ru.oz.ci.citest.integration.JdbcMessageHandler" />
+
+    <int:poller default="true" fixed-rate="100" />
+
+    <!--<feed:inbound-channel-adapter id="news" url="http://spring.io/blog.atom" auto-startup="${auto.startup:true}">-->
+    <!--<int:poller fixed-rate="5000"/>-->
+    <!--</feed:inbound-channel-adapter>-->
+
+    <!--<int:transformer-->
+    <!--input-channel="news"-->
+    <!--expression="payload.title + ' @ ' + payload.link + '#{systemProperties['line.separator']}'"-->
+    <!--output-channel="file"/>-->
+
+    <!--<file:outbound-channel-adapter id="file"-->
+    <!--mode="APPEND"-->
+    <!--charset="UTF-8"-->
+    <!--directory="/tmp/si"-->
+    <!--filename-generator-expression="'${feed.file.name:SpringBlog}'"/>-->
+
+
+</beans>
