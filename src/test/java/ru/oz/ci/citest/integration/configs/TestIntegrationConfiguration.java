@@ -1,4 +1,4 @@
-package ru.oz.ci.citest.integration;
+package ru.oz.ci.citest.integration.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +51,16 @@ public class TestIntegrationConfiguration {
                     System.out.println("was handled =" + new MutableMessage(payload, header));
                     return payload;
                 })
+                .<String, String>route(s -> s.split(":")[0],
+                                       spec -> spec.prefix("send").suffix("Channel")
+                .channelMapping("key1", "sendSystemOutChannel")
+                .channelMapping("key2", "sendSystemOutChannel")
+                .channelMapping("key3", "sendSystemOutChannel")
+                .resolutionRequired(false)
+                .defaultOutputChannel("sendSystemOutChannel"))
+                .get();
+
+              //   .route(  https://github.com/valery-nik/spring-integration-showcase/blob/master/src/main/java/com/example/sample2/FtpConfig.java
                 .channel(MessageChannels.queue("recieved"))
                 .get();
     }
@@ -73,6 +83,11 @@ public class TestIntegrationConfiguration {
                 .get();
     }
 
+    @Bean
+    public IntegrationFlow showOnConsole() {
+        return f -> f.channel("sendSystemOutChannel")
+                .handle(System.out::println);
+    }
 
 //    @Bean
 //    public IntegrationFlow fileReadingFlow() {
