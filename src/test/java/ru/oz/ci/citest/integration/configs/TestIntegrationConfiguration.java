@@ -61,8 +61,8 @@ public class TestIntegrationConfiguration {
                 .get();
 
               //   .route(  https://github.com/valery-nik/spring-integration-showcase/blob/master/src/main/java/com/example/sample2/FtpConfig.java
-                .channel(MessageChannels.queue("recieved"))
-                .get();
+        //        .channel(MessageChannels.queue("recieved"))
+        //        .get();
     }
 
     @Bean(name = PollerMetadata.DEFAULT_POLLER)
