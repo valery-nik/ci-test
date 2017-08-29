@@ -17,4 +17,13 @@ public class SampleIntegrationConfigTest {
     public void mainIntegrationTest() throws Exception {
         inputGateway.run("Hello, world");
     }
+
+    @Test
+    public void runAsyncTest() throws Exception {
+        inputGateway.runAsync(1);
+        inputGateway.runAsync(2);
+        inputGateway.runAsync(3);
+        inputGateway.runAsync(4);
+        inputGateway.runAsync(5);
+    }
 }

@@ -41,14 +41,19 @@ Spring integration
      - mail
      - ftp
      - STOMP и т.д.
-    
-Flow (потоки или цепочки) - конфигурирование взаимодействия между каналами.
+
+spring-integration-java-dsl - дополнение к   Integration, позловляющее сконструктурировать и настроть мессадж-интеграцию
+   в терминах спец. DSL языка 
+Flow (потоки или цепочки) - DSL абстракция для конфигурирования пути мессаджа как в одном так и между каналами
 ErrorHandlers - каналы-обработчики ошибочных сообщений
 ServiceActivators - сервисы Spring Core для вызова SI (для общения с приложением из вне)
 Gateways - интерфейсы SI для отправки сообщений из Spring Core (для общения с приложением из вне)
 
 service-activator - потребитель сообщений из канала
 
+@MessagingGateway - шлюз сообщений, позволяет уйти от уровень асбтракции месенджинга и заниматься исключительно бизнес логикой
 @MessagingGateway - пометить интерфейс из которого нужно создать MessagingGateway с Gateways
+   @Gateway(requestChannel = "in2") //, replyChannel = "out")
+
 @EnableIntegration
 @IntegrationComponentScan - запуск сканирования на предмет наличия @MessagingGateway

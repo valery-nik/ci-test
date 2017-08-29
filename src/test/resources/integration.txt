@@ -1,0 +1,2 @@
+mail;ystal@mail.ru;привет
+rdbms;integration;привет

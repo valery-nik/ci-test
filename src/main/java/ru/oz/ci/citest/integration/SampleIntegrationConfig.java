@@ -16,6 +16,7 @@ import java.util.concurrent.Future;
 @IntegrationComponentScan
 public class SampleIntegrationConfig {
 
+    // создание флоу, где производится опрос канала in и выводится в консоле сообщение
     @Bean
     public IntegrationFlow sampleFlow() {
         return IntegrationFlows.from("in")
@@ -26,14 +27,46 @@ public class SampleIntegrationConfig {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    System.out.println(message.getPayload());
+                    System.out.println("sampleFlow.handle -> " + message.getPayload());
                 }).get();
     }
 
+    // создание флоу, где производится опрос интов из канала in2
+    // фильтрация на четность
+    // сохранение в канал out
     @Bean
     public IntegrationFlow asyncFlow() {
-        return f -> f.channel("in2").<Integer>filter(value -> value % 2 == 0)
-                .channel("out");
+
+        return flowDefinition ->
+                flowDefinition
+                        .channel("in2")
+                        .<Integer>filter(value -> value % 2 == 0)
+                        .channel("out");
+//        return new  IntegrationFlow() {
+//            @Override
+//            public void configure(IntegrationFlowDefinition<?> flow) {
+//
+//            }
+//        };
+
+
+//        return f -> f
+//                .channel("in2")
+//                .<Integer>filter(value -> value % 2 == 0)
+//                .channel("out");
+    }
+
+    @Bean
+    public IntegrationFlow printOutFlow() {
+        return IntegrationFlows.from("out")
+                .handle(message -> {
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("printOutFlow.handle -> " + message.getPayload());
+                }).get();
     }
 
 
@@ -42,7 +75,8 @@ public class SampleIntegrationConfig {
         @Gateway(requestChannel = "in")
         void run(String payload);
 
-        @Gateway(requestChannel = "in2", replyChannel = "out")
+        @Gateway(requestChannel = "in2")
+            //, replyChannel = "out")
         Future<Void> runAsync(Integer payload);
     }
 }
