@@ -40,8 +40,11 @@ public class SampleIntegrationConfig {
         return flowDefinition ->
                 flowDefinition
                         .channel("in2")
-                        .<Integer>filter(value -> value % 2 == 0)
-                        .channel("out");
+                        .handle(message -> {
+                            System.out.println("asyncFlow.handle -> " + message.getPayload());
+                        });
+//                        .<Integer>filter(value -> value % 2 == 0)
+//                        .channel("out");
 //        return new  IntegrationFlow() {
 //            @Override
 //            public void configure(IntegrationFlowDefinition<?> flow) {
